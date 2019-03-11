@@ -1,2 +1,3 @@
-# Ignore .class files
+# Ignore .class & .vscode files
 *.class
+*.vscode
