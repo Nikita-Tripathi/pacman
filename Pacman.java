@@ -1,51 +1,42 @@
-import java.util.Scanner;
-import java.util.Arrays;
-
 /**
  * pacman
  */
 public class Pacman {
-
+	
+	public int[] prevMove = new int[] {0, -1};
+	
 	/**
 	This method takes in user input and converts it into the correct format to be used in Brain.java
 	*/
-    public static int[] move(){
-		Scanner keyboard = new Scanner(System.in);
-        
-        System.out.print("Choose a direction (use lowercase u for up, d for down, etc... player will not move unless you use u, d, l or r): ");
-		String input = keyboard.nextLine();
-		int[] direction = new int[2];
+    public int[] move(String input){
+        System.out.println(input);
+		int[] direction;
 			
-			switch(input) { 
-				case "u":
-					direction[0] = 0;
-					direction[1] = -1;
-					break;
-
-				case "d":
-					direction[0] = 0;
-					direction[1] = 1;
-					break;
-
-				case "l":
-					direction[0] = 1;
-					direction[1] = -1;
-					break;
-
-				case "r":
-					direction[0] = 1;
-					direction[1] = 1;
-					break;
-
-                default:
-                    // no movement aka magnitude 0
-                    direction[0] = 0;
-                    direction[1] = 0;
+		System.out.println(prevMove[0] + "  " + prevMove[1]);
+		switch(input) { 
+			case "w":
+				direction = new int[] {0, -1};
 				break;
-			}
+
+			case "s":
+				direction = new int[] {0, 1};
+				break;
+
+			case "a":
+				direction = new int[] {1, -1};
+				break;
+
+			case "d":
+				direction = new int[] {1, 1};
+				break;
+
+            default:
+				// previous move
+                return prevMove;
+		}
+		this.prevMove = direction;
 
         return direction;
-		
 		
 	}
 	
