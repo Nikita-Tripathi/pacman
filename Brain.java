@@ -30,7 +30,7 @@ public class Brain {
 	
 	public int lives = 3;
 	
-	public boolean powerStatus = false; 
+	public boolean powerStatus = false; //in attemps to fix the bug specified in comment found in method move
 	
     
     // score
@@ -38,7 +38,7 @@ public class Brain {
 
    /**
    	checks for valid moves of movable objects, moving them accordingly
-   */
+   */ 
     public void validateMove(int[] position, int[] move) {
         int toCheck = position[move[0]] + move[1];
         int ceiling;
@@ -61,9 +61,7 @@ public class Brain {
 
     }
 
-    /**
-    	updates position of movable object
-    */
+    // updates position of movable object
     public void move(int[] position, int[] move) {
 		//Resets the position if they intersect, depending on the Pacmans status (powered up or not)
 		//Current parameters: Pacman gets sent to top left, ghost gets sent to inside the box
@@ -90,8 +88,7 @@ public class Brain {
 			gameWorld.setMovingArr(newArr);
 		}
     }
-	
-	
+
     /**
     	Checks if pacman obtained a power pellet or coin	
     */
@@ -118,7 +115,6 @@ public class Brain {
 	/**
 	    Checks lives of player or ghost and resets the position if necessary
 	*/
-	
 	public void checkLives(String character){
 		
 		boolean intersect = (playerPosition[0] == ghostPosition[0])&&(playerPosition[1] == ghostPosition[1]);
@@ -162,7 +158,7 @@ public class Brain {
 		int counter = 50; //number of moves before power up runs out--> set to 50 for testing
 		powerStatus = true; //experimental
 		
-		while (counter > 0 && score < 850){ //score is also for testing
+		while (counter > 0 && score < 1000){ //score is also for testing
 			gameWorld.setPowerUpArr();
 			
             displayBoard();
@@ -216,8 +212,9 @@ public class Brain {
         gameWorld.setMovingArr(newMoveArr);
 	}
 	
+ 
 	/**
-        CHANGED: games over when lives have run out
+		games over when lives have run out
 	*/
     public boolean checkGameOver() {
         
@@ -225,7 +222,7 @@ public class Brain {
     }
 
     //For displaying arrays in  matrix form (good for debugging)
-	public static void display(String display[][]){
+	public void display(String display[][]){
 		for(int i =0; i< display.length;i++){
             System.out.print("| ");
 				for (int j = 0; j < display[0].length; j++){
@@ -260,9 +257,9 @@ public class Brain {
 
     }
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         // Gameloop
-        while (score < 1000 && !checkGameOver()) {
+        while (score < 850 && !checkGameOver()) {
 			checkLives("player");
             displayBoard();
             validateMove(playerPosition, player.move("s"));
