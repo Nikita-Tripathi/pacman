@@ -30,7 +30,8 @@ public class gui extends Application {
             gameGridPane.getColumnConstraints().add(new ColumnConstraints(40));
             gameGridPane.getRowConstraints().add(new RowConstraints(40));
         }
-
+		
+		//creating the visual board
         String [][] boardTemp = gameBrain.getDisplayArr();
             gameGridPane.getChildren().clear();
             for (int i = 0; i < boardTemp.length; i++) {
@@ -38,9 +39,10 @@ public class gui extends Application {
                     gameGridPane.add(new Label(boardTemp[i][j]), j, i);
                 }
             }
+			
+		//setting the texts
         Label scoreLabel = new Label("Score: " + gameBrain.score);
-        //Label label1 = new Label("hi");
-        //root.setBottom(label1);
+ 
         Label youLost = new Label(" You Lost!!");
         root.setTop(scoreLabel);
         root.setCenter(gameGridPane);
@@ -48,13 +50,45 @@ public class gui extends Application {
 
         Scene gameScreen = new Scene(root, 700, 700);
 
+		//Event handler
         gameScreen.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
-            gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
-            gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove());
+			
+			//normal pacman
+			if(gameBrain.powerStatus == false) {
+				gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
+				gameBrain.checkLives("player");
+				gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove());
+				gameBrain.checkLives("player");
+				
+				gameBrain.checkCoins();
+			}
+			
+			//pacman with power up
+			if(gameBrain.powerStatus == true) {
+				int counter = 50;
+				System.out.println(counter);
+
+				
+				if(counter > 0 && gameBrain.score < 850){ //score is also for testing
+					gameBrain.gameWorld.setPowerUpArr();
+					
+					gameBrain.checkLives("ghost");
+					gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
+					gameBrain.checkLives("ghost");
+					gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove());
+					gameBrain.checkLives("ghost");
+					
+					gameBrain.checkCoins();
+					System.out.println(counter);
+					
+					counter--;
+				}
+				gameBrain.gameWorld.resetFromPowerUpArr();
+				
+				gameBrain.powerStatus = false;
+			}
             
-            gameBrain.checkCoins();
-			gameBrain.checkLives("a");
-            
+			//checks the game status
             if(gameBrain.checkGameOver()) {
                 root.getChildren().remove(gameGridPane);
                 root.setCenter(youLost);
@@ -62,7 +96,8 @@ public class gui extends Application {
                 youLost.setTextFill(Color.RED);
                 
                 }
-            else if( gameBrain.score >= 750) {
+				
+            else if( gameBrain.score >= 850) {
                 root.getChildren().remove(gameGridPane);
                 Label label1 = new Label("You Won!");
                 label1.setFont(Font.font("Verdana" , 76));
@@ -73,7 +108,7 @@ public class gui extends Application {
                 
             System.out.println(gameBrain.score);
             scoreLabel.setText("Score: " + gameBrain.score+ "Lives: "+ gameBrain.lives);
-            if (gameBrain.score > 800) {
+            if (gameBrain.score > 850) {
                 System.out.println("You Won!");
                 }
             
