@@ -10,20 +10,20 @@ public class Brain {
 
         {" ", "W", " ", " ", " ", " ", " ", " ", "W", " "},
 
-        {" ", "W", " ", "W", " ", "W", "W", " ", "W", " "},
+        {" ", "W", " ", "W", " ", "W", " ", " ", "W", " "},
 
         {" ", "W", " ", "W", "W", "W", " ", " ", " ", " "},
 
         {" ", "W", " ", " ", " ", " ", " ", "W", "W", " "},
 
-        {" ", " ", " ", " ", " ", " ", "W", "W", " ", " "},
+        {" ", " ", " ", " ", " ", " ", " ", "W", " ", " "},
 
      };
 	
     public int width = initialArray.length;
     public int height = initialArray[0].length;
     public int[] playerPosition = {0, 0};
-    public int[] ghostPosition = {4, 2}; //Inside the open ended box
+    public int[] ghostPosition = {2, 4}; //Inside the open ended box
     public Pacman player = new Pacman();
     public Ghost ghost1 = new Ghost();
     public World gameWorld = new World(initialArray, playerPosition, ghostPosition);
@@ -108,7 +108,6 @@ public class Brain {
 				gameWorld.setCoinArr(newCoins);
 				System.out.println("Collected PowerPellet!");
 				activatePowerUp();
-		    //powerStatus = true;
             }
             newCoins[playerPosition[0]][playerPosition[1]] = " ";
             gameWorld.setCoinArr(newCoins);
@@ -163,7 +162,7 @@ public class Brain {
 		int counter = 50; //number of moves before power up runs out--> set to 50 for testing
 		powerStatus = true; //experimental
 		
-		while (counter > 0 && score < 1000){ //score is also for testing
+		while (counter > 0 && score < 850){ //score is also for testing
 			gameWorld.setPowerUpArr();
 			
             displayBoard();
@@ -207,8 +206,8 @@ public class Brain {
 			
 				newMoveArr[ghostPosition[0]][ghostPosition[1]] = "P";
 				
-				ghostPosition[0] = 4;
-				ghostPosition[1] = 2;
+				ghostPosition[0] = 2;
+				ghostPosition[1] = 4;
 
 				newMoveArr[ghostPosition[0]][ghostPosition[1]] = "g";
 			}
