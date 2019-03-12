@@ -5,39 +5,39 @@ import java.util.Arrays;
  * brain
  */
 public class Brain {
-    public static String[][] initialArray = {
-        {" ", " ", "W", " ", " ", " ", " ", " ", "W", " "},
+    public String[][] initialArray = {
+        {" ", " ", " ", " ", " ", " ", " ", " ", "W", " "},
 
-        {" ", " ", "W", " ", " ", " ", " ", " ", "W", " "},
+        {" ", " ", " ", " ", " ", "W", "W", " ", "W", " "},
 
-        {" ", " ", "W", " ", " ", " ", " ", " ", "W", " "},
+        {" ", " ", " ", "W", " ", "W", " ", " ", "W", " "},
 
-        {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+        {" ", "W", " ", "W", "W", "W", " ", " ", " ", " "},
 
-        {" ", " ", "W", "W", " ", " ", " ", " ", "W", "W"},
+        {" ", "W", "W", "W", " ", " ", " ", " ", "W", "W"},
 
         {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
 
      };
 	
-    public static int width = initialArray.length;
-    public static int height = initialArray[0].length;
-    public static int[] playerPosition = {0, 0};
-    public static int[] ghostPosition = {width-1, height-1};
-    public static Pacman player = new Pacman();
-    public static Ghost ghost1 = new Ghost();
-    public static World gameWorld = new World(initialArray, playerPosition, ghostPosition);
+    public int width = initialArray.length;
+    public int height = initialArray[0].length;
+    public int[] playerPosition = {0, 0};
+    public int[] ghostPosition = {4, 3}; //Inside the open ended box
+    public Pacman player = new Pacman();
+    public Ghost ghost1 = new Ghost();
+    public World gameWorld = new World(initialArray, playerPosition, ghostPosition);
 	
-	public static int lives = 3;
+	public int lives = 3;
 	
-	public static boolean powerStatus = false; //in attemps to fix the bug specified in comment found in method move
+	public boolean powerStatus = false; //in attemps to fix the bug specified in comment found in method move
 	
     
     // score
-    public static int score = 0;
+    public int score = 0;
 
     // checks for valid moves 
-    public static void validateMove(int[] position, int[] move) {
+    public void validateMove(int[] position, int[] move) {
         int toCheck = position[move[0]] + move[1];
         int ceiling;
         int w = position[0];
@@ -60,7 +60,7 @@ public class Brain {
     }
 
     // updates position of movable object
-    public static void move(int[] position, int[] move) {
+    public void move(int[] position, int[] move) {
 		//Resets the position if they intersect, depeding on the Pacmans status (powered up or not)
 		//Current parameters: Pacman gets sent to top left, ghost gets sent to bottom right
 		//BUG: down by the lower corner where ghost respawns, if Pacman encounters the ghost in that area,
@@ -88,7 +88,7 @@ public class Brain {
     }
 
     // check if pacman got coin/powerup
-    public static void checkCoins() {
+    public void checkCoins() {
         String[][] coins = gameWorld.getCoinArr();
 		String[][] newCoins = gameWorld.copyArr(coins);
 						
@@ -109,7 +109,7 @@ public class Brain {
     }
  
 	//checks lives of player or ghost and resets the position if necessary
-	public static void checkLives(String character){
+	public void checkLives(String character){
 		
 		boolean intersect = (playerPosition[0] == ghostPosition[0])&&(playerPosition[1] == ghostPosition[1]);
 
@@ -144,7 +144,7 @@ public class Brain {
     }    
 	
 	//allows pacman to eat the ghosts
-	public static void activatePowerUp(){
+	public void activatePowerUp(){
 		int counter = 50; //number of moves before power up runs out--> set to 50 for testing
 		powerStatus = true; //experimental
 		
@@ -172,7 +172,7 @@ public class Brain {
 	}
 	
 	//resets pacman to the first block if lives stil remain, and ghost to the diagonal if consumed
-	public static void resetPosition(String character) {
+	public void resetPosition(String character) {
 		
 		String[][] newMoveArr = gameWorld.copyArr(gameWorld.getMovingArr());
 		
@@ -190,8 +190,8 @@ public class Brain {
 			
 				newMoveArr[ghostPosition[0]][ghostPosition[1]] = "P";
 				
-				ghostPosition[0] = width-1;
-				ghostPosition[1] = height-1;
+				ghostPosition[0] = 4;
+				ghostPosition[1] = 3;
 
 				newMoveArr[ghostPosition[0]][ghostPosition[1]] = "g";
 			}
