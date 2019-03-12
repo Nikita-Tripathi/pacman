@@ -6,37 +6,39 @@ import java.util.Arrays;
  */
 public class Brain {
     public String[][] initialArray = {
-        {" ", " ", " ", " ", " ", " ", " ", " ", "W", " "},
+        {" ", " ", " ", " ", "W", "W", "W", " ", "W", " "},
 
-        {" ", " ", " ", " ", " ", "W", "W", " ", "W", " "},
+        {" ", "W", " ", " ", " ", " ", " ", " ", "W", " "},
 
-        {" ", " ", " ", "W", " ", "W", " ", " ", "W", " "},
+        {" ", "W", " ", "W", " ", "W", "W", " ", "W", " "},
 
         {" ", "W", " ", "W", "W", "W", " ", " ", " ", " "},
 
-        {" ", "W", "W", "W", " ", " ", " ", " ", "W", "W"},
+        {" ", "W", " ", " ", " ", " ", " ", "W", "W", " "},
 
-        {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+        {" ", " ", " ", " ", " ", " ", "W", "W", " ", " "},
 
      };
 	
     public int width = initialArray.length;
     public int height = initialArray[0].length;
     public int[] playerPosition = {0, 0};
-    public int[] ghostPosition = {4, 3}; //Inside the open ended box
+    public int[] ghostPosition = {4, 2}; //Inside the open ended box
     public Pacman player = new Pacman();
     public Ghost ghost1 = new Ghost();
     public World gameWorld = new World(initialArray, playerPosition, ghostPosition);
 	
 	public int lives = 3;
 	
-	public boolean powerStatus = false; //in attemps to fix the bug specified in comment found in method move
+	public boolean powerStatus = false; 
 	
     
     // score
     public int score = 0;
 
-    // checks for valid moves 
+   /**
+   	checks for valid moves of movable objects, moving them accordingly
+   */
     public void validateMove(int[] position, int[] move) {
         int toCheck = position[move[0]] + move[1];
         int ceiling;
@@ -59,11 +61,13 @@ public class Brain {
 
     }
 
-    // updates position of movable object
+    /**
+    	updates position of movable object
+    */
     public void move(int[] position, int[] move) {
-		//Resets the position if they intersect, depeding on the Pacmans status (powered up or not)
-		//Current parameters: Pacman gets sent to top left, ghost gets sent to bottom right
-		//BUG: down by the lower corner where ghost respawns, if Pacman encounters the ghost in that area,
+		//Resets the position if they intersect, depending on the Pacmans status (powered up or not)
+		//Current parameters: Pacman gets sent to top left, ghost gets sent to inside the box
+		//BUG: can not get the GUI version to take any keyboard input until counter runs out
 		//     the game halts until the counter runs out for the power pellet
 		
 		if ((playerPosition[0] == ghostPosition[0])&&(playerPosition[1] == ghostPosition[1])) {
@@ -86,8 +90,11 @@ public class Brain {
 			gameWorld.setMovingArr(newArr);
 		}
     }
-
-    // check if pacman got coin/powerup
+	
+	
+    /**
+    	Checks if pacman obtained a power pellet or coin	
+    */
     public void checkCoins() {
         String[][] coins = gameWorld.getCoinArr();
 		String[][] newCoins = gameWorld.copyArr(coins);
@@ -101,6 +108,7 @@ public class Brain {
 				gameWorld.setCoinArr(newCoins);
 				System.out.println("Collected PowerPellet!");
 				activatePowerUp();
+		    //powerStatus = true;
             }
             newCoins[playerPosition[0]][playerPosition[1]] = " ";
             gameWorld.setCoinArr(newCoins);
@@ -108,7 +116,10 @@ public class Brain {
         }
     }
  
-	//checks lives of player or ghost and resets the position if necessary
+	/**
+	    Checks lives of player or ghost and resets the position if necessary
+	*/
+	
 	public void checkLives(String character){
 		
 		boolean intersect = (playerPosition[0] == ghostPosition[0])&&(playerPosition[1] == ghostPosition[1]);
@@ -123,7 +134,9 @@ public class Brain {
 		}
 	}
 	
-	//returns the thing (very specific i know)
+	/**
+		returns the game board
+	*/
     public String[][] getDisplayArr() {
         String[][] moving = gameWorld.getMovingArr();
         String[][] coins = gameWorld.getCoinArr();
@@ -143,7 +156,9 @@ public class Brain {
         return board;
     }    
 	
-	//allows pacman to eat the ghosts
+	/**
+		Allows pacman to eat the ghosts after obtaining a power pellet (only functional in the Text base version)
+	*/
 	public void activatePowerUp(){
 		int counter = 50; //number of moves before power up runs out--> set to 50 for testing
 		powerStatus = true; //experimental
@@ -171,7 +186,9 @@ public class Brain {
 		powerStatus = false;
 	}
 	
-	//resets pacman to the first block if lives stil remain, and ghost to the diagonal if consumed
+	/**
+		resets pacman to the first block if lives stil remain, and ghost to the inside box if consumed
+	*/
 	public void resetPosition(String character) {
 		
 		String[][] newMoveArr = gameWorld.copyArr(gameWorld.getMovingArr());
@@ -191,7 +208,7 @@ public class Brain {
 				newMoveArr[ghostPosition[0]][ghostPosition[1]] = "P";
 				
 				ghostPosition[0] = 4;
-				ghostPosition[1] = 3;
+				ghostPosition[1] = 2;
 
 				newMoveArr[ghostPosition[0]][ghostPosition[1]] = "g";
 			}
@@ -200,10 +217,10 @@ public class Brain {
         gameWorld.setMovingArr(newMoveArr);
 	}
 	
- 
- 
-    //CHANGED: games over when lives have run out
-    public static boolean checkGameOver() {
+	/**
+        CHANGED: games over when lives have run out
+	*/
+    public boolean checkGameOver() {
         
         return lives == 0;
     }
@@ -222,7 +239,7 @@ public class Brain {
     }
     
     // for displaying the actual game board
-    public static void displayBoard() {
+    public void displayBoard() {
         String[][] moving = gameWorld.getMovingArr();
         String[][] coins = gameWorld.getCoinArr();
 
