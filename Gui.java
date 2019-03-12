@@ -14,7 +14,7 @@ import javafx.geometry.Pos;
 /**
  * gui
  */
-public class gui extends Application {
+public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) {
