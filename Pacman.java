@@ -9,10 +9,10 @@ public class Pacman {
 	This method takes in user input and converts it into the correct format to be used in Brain.java
 	*/
     public int[] move(String input){
-        System.out.println(input);
+        // System.out.println(input);
 		int[] direction;
 			
-		System.out.println(prevMove[0] + "  " + prevMove[1]);
+		// System.out.println(prevMove[0] + "  " + prevMove[1]);
 		switch(input) { 
 			case "w":
 				direction = new int[] {0, -1};

@@ -43,10 +43,13 @@ public class gui extends Application {
         Scene gameScreen = new Scene(root, 700, 700);
 
         gameScreen.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            gameBrain.incrementTimer();
             gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
             gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove());
             gameBrain.checkCoins();
             
+            System.out.println(gameBrain.score);
+            System.out.println(gameBrain.timer + " " + gameBrain.stopPowerup);
             // check for win
 
             String [][] board = gameBrain.getDisplayArr();

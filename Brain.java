@@ -22,8 +22,59 @@ public class Brain {
     
     // score
     public int score = 0;
-    
+    public boolean powerStatus = false;
 
+    // Subject to change
+    public int timer = 0;
+    
+    // when should the powerup stop
+    public int stopPowerup;
+
+    /**
+     * @return the timer
+     */
+    public int getTimer() {
+        return timer;
+    }
+
+
+    public void incrementTimer() {
+        this.timer++;
+    }
+
+    public void handlePowerUp(boolean pickedUp) {
+        if (pickedUp) {
+            // powerup expires in 10 sec/moves
+            this.stopPowerup = getTimer() + 10;
+            this.powerStatus = true;
+            System.out.println("Got pwerup!");
+        } else {
+            if (getTimer() > this.stopPowerup) this.powerStatus = false;
+            System.out.println(this.stopPowerup - getTimer() + " seco   nds left");
+        }
+    }
+
+    // check if ghost is exactly 0 moves away from pacman
+    // true means you met a ghost false means not yet
+    public boolean checkGhost() {
+        int wDist = Math.abs(playerPosition[0] - ghostPosition[0]);
+        int hDist = Math.abs(playerPosition[1] - ghostPosition[1]);
+
+        return (wDist == 0 & hDist == 0);
+    }
+
+
+    public void handleGhostTouch() {
+        if (checkGhost()) {
+            if (this.powerStatus) {
+                System.out.println("Gottem");
+                this.score += 250;
+                this.ghostPosition[0] = this.width-1;
+                this.ghostPosition[1] = this.height-1;
+
+            }
+        }
+    }
     // checks for valid moves 
     public void validateMove(int[] position, int[] move) {
         int toCheck = position[move[0]] + move[1];
@@ -58,6 +109,7 @@ public class Brain {
         newArr[position[0]][position[1]] = character;
         
         gameWorld.setMovingArr(newArr);
+        handlePowerUp(false);
         // displayBoard();
     }
 
@@ -70,6 +122,7 @@ public class Brain {
                 score += 100;
             } else if (coins[playerPosition[0]][playerPosition[1]] == "O"){
                 score += 250;
+                handlePowerUp(true);
             }
             String[][] newCoins = gameWorld.copyArr(coins);
             newCoins[playerPosition[0]][playerPosition[1]] = " ";
@@ -78,16 +131,6 @@ public class Brain {
         }
     }
  
-    // check if ghost is exactly 1 or 0 moves away from pacman
-    // if the vertical distance between ghost an player is 1 and horisontal
-    // is 0 (or vice-versa) that means they are exactly 1 move apart, so game over
-    // true means you lost false means still going
-    public boolean checkGameOver() {
-        int wDist = Math.abs(playerPosition[0] - ghostPosition[0]);
-        int hDist = Math.abs(playerPosition[1] - ghostPosition[1]);
-
-        return (wDist == 1 & hDist == 0) || (wDist == 0 & hDist == 1) || (wDist == 0 & hDist == 0);
-    }
     
     //returns the thing (very specific i know)
     public String[][] getDisplayArr() {
@@ -106,6 +149,8 @@ public class Brain {
                 }
             }
         }
+        board[this.playerPosition[0]][this.playerPosition[1]] = "P";
+        board[this.ghostPosition[0]][this.ghostPosition[1]] = "G";
         return board;
     }    
 
