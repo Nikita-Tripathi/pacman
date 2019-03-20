@@ -24,8 +24,8 @@ public class Brain {
     public int height = initialArray[0].length;
     public int[] playerPosition = {0, 0};
     public int[] ghostPosition = {2, 4}; //Inside the open ended box
-    public Pacman player = new Pacman();
-    public Ghost ghost1 = new Ghost();
+    public Entity player = new Pacman();
+    public Entity ghost1 = new Ghost();
     public World gameWorld = new World(initialArray, playerPosition, ghostPosition);
 	
 	public int lives = 3;
@@ -165,7 +165,7 @@ public class Brain {
 			checkLives("ghost");
             validateMove(playerPosition, player.move("s"));
 			checkLives("ghost");
-            validateMove(ghostPosition, ghost1.getRandomMove());
+            validateMove(ghostPosition, ghost1.move(""));
 			checkLives("ghost");
             
             checkCoins();
@@ -264,7 +264,7 @@ public class Brain {
             displayBoard();
             validateMove(playerPosition, player.move("s"));
 			checkLives("player");
-            validateMove(ghostPosition, ghost1.getRandomMove());
+            validateMove(ghostPosition, ghost1.move(""));
 			checkLives("player");
             
             checkCoins();

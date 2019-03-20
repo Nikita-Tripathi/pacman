@@ -1,7 +1,7 @@
 /**
  * pacman
  */
-public class Pacman {
+public class Pacman extends Entity{
 	
 	public int[] prevMove = new int[] {0, -1};
 	

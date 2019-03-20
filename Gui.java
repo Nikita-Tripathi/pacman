@@ -57,7 +57,7 @@ public class Gui extends Application {
 			if(gameBrain.powerStatus == false) {
 				gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
 				gameBrain.checkLives("player");
-				gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove());
+				gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.move(""));
 				gameBrain.checkLives("player");
 				
 				gameBrain.checkCoins();
@@ -75,7 +75,7 @@ public class Gui extends Application {
 					gameBrain.checkLives("ghost");
 					gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
 					gameBrain.checkLives("ghost");
-					gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove());
+					gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.move(""));
 					gameBrain.checkLives("ghost");
 					
 					gameBrain.checkCoins();
