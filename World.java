@@ -37,6 +37,8 @@ public class World {
     /**
      * @param movingArr the movingArr to set
      */
+	 
+	 
     public void setMovingArr(String[][] movingArr) {
         this.movingArr = movingArr;
     }

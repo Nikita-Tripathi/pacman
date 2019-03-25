@@ -4,28 +4,23 @@ import java.util.Arrays;
 /**
  * brain
  */
-public class Brain {
-    public String[][] initialArray = {
-        {" ", " ", " ", " ", " ", "W", "W", " ", "W", " "},
+public class Brain{
 
-        {" ", "W", " ", " ", " ", " ", " ", " ", "W", " "},
-
-        {" ", "W", " ", " ", " ", " ", " ", " ", "W", " "},
-
-        {" ", "W", " ", "W", " ", "W", " ", " ", " ", " "},
-
-        {" ", "W", " ", "W", "W", "W", " ", "W", "W", " "},
-
-        {" ", " ", " ", " ", " ", " ", " ", "W", " ", " "},
-
-     };
+	public String[] levelArr = {"level 1.txt", "level 2.txt"};
+	public int level = 0;
+	
+	public WorldInput inputLevel = new WorldInput();
+    public String[][] initialArray = inputLevel.getWorldArray("level 1.txt");
 	
     public int width = initialArray.length;
     public int height = initialArray[0].length;
-    public int[] playerPosition = {0, 0};
-    public int[] ghostPosition = {3, 4}; //Inside the open ended box
-    public Pacman player = new Pacman();
+	
+	public Pacman player = new Pacman();
     public Ghost ghost1 = new Ghost();
+	
+    public int[] playerPosition = player.getSpawnPosition(initialArray);
+    public int[] ghostPosition = ghost1.getSpawnPosition(initialArray);
+
     public World gameWorld = new World(initialArray, playerPosition, ghostPosition);
 	
 	public int lives = 3;
@@ -35,6 +30,12 @@ public class Brain {
     
     // score
     public int score = 0;
+
+	//initializes arrays
+	public String[][] initializeArray() throws java.io.IOException{
+		return inputLevel.getWorldArray(levelArr[level]);
+	}
+
 
    /**
    	checks for valid moves of movable objects, moving them accordingly
@@ -243,7 +244,7 @@ public class Brain {
         for(int i =0; i< moving.length;i++){
             System.out.print("|");
 				for (int j =0;j < moving[0].length; j++){
-                    if (moving[i][j] != " ") {
+                    if (moving[i][j] != " " && moving[i][j] != "S" && moving[i][j] != "s") {
                         System.out.print(moving[i][j] + " ");
                     } else if (coins[i][j] != " "){
                         System.out.print(coins[i][j] + " ");
@@ -258,8 +259,10 @@ public class Brain {
 
     }
 
-    public void main(String[] args) {
+    public void main(String[] args)throws java.io.IOException {
         // Gameloop
+		initializeArray();
+		
         while (score < 850 && !checkGameOver()) {
 			checkLives("player");
             displayBoard();

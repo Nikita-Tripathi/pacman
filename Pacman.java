@@ -40,4 +40,22 @@ public class Pacman {
 		
 	}
 	
+	public int[] getSpawnPosition(String [][] movingArr){
+		int[] playerPosition = new int[2]; 
+			playerPosition[0] = 0;
+			playerPosition[1] = 0;
+		
+	  for(int i = 0; i < 9; i++){
+		  for(int j = 0; j < 9; j++){
+			  if (movingArr[i][j] == "S"){
+				  playerPosition[0] = i;
+				  playerPosition[1] = j;
+				  break;
+			  }
+		  }
+	  }
+	  
+	  return playerPosition;
+	}
+	
 }
