@@ -10,6 +10,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
+import javafx.scene.image.*;
+
+import pacmanlogic.*;
 
 /**
  * gui
@@ -25,6 +28,10 @@ public class Gui extends Application {
         
 
         GridPane gameGridPane = new GridPane();
+        ImageView ghostImage = new ImageView();
+        Image image1 = new Image(Gui.class.getResourceAsStream("Ghost.png"));
+        ghostImage.setImage(image1);
+
         
         for (int i = 0; i < 10; i++) {
             gameGridPane.getColumnConstraints().add(new ColumnConstraints(40));

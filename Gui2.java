@@ -13,6 +13,11 @@ import javafx.scene.text.Font;
 import javafx.geometry.Pos;
 import javafx.scene.shape.*;
 
+import javafx.scene.image.*;
+
+import pacmanlogic.*;
+
+
 /**
  * gui
  */
@@ -35,18 +40,12 @@ public class Gui2 extends Application {
             gameGridPane.getChildren().clear();
             for (int i = 0; i < boardTemp.length; i++) {
                 for (int j = 0; j < boardTemp[0].length; j++) {
-                    gameGridPane.add(new Label(board[i][j]), j, i);
                     if(boardTemp[i][j] == "P"){
-                        int prow = i;
-                        int pcol = j;
-                        System.out.println("The P is at i"+i+"j"+j);
-                        gameGridPane.add(new Rectangle(20, 20, Color.YELLOWGREEN),pcol,prow);
+                        gameGridPane.add(new Rectangle(20, 20, Color.YELLOWGREEN),j,i);
                         
                     }
                     else if(boardTemp[i][j] == "G"){
-                        int grow = i;
-                        int gcol = j;
-                        gameGridPane.add(new Rectangle(20, 20, Color.PINK),gcol,grow);
+                        gameGridPane.add(new Rectangle(20, 20, Color.PINK),j,i);
                     }
 
                     else if(boardTemp[i][j] == "C"){
