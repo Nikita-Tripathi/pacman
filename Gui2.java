@@ -33,10 +33,10 @@ public class Gui2 extends Application {
         String [][] boardTemp = gameBrain.getDisplayArr();
         String [][] board = gameBrain.getDisplayArr();
             gameGridPane.getChildren().clear();
-            for (int i = 0; i < gameBrain.getDisplayArr().lenght; i++) {
-                for (int j = 0; j < gameBrain.getDisplayArrp()[0].length; j++) {
+            for (int i = 0; i < boardTemp.length; i++) {
+                for (int j = 0; j < boardTemp[0].length; j++) {
                     gameGridPane.add(new Label(board[i][j]), j, i);
-                    if(gameBrain.getDisplayArr()[i][j] == "P"){
+                    if(boardTemp[i][j] == "P"){
                         int prow = i;
                         int pcol = j;
                         System.out.println("The P is at i"+i+"j"+j);
@@ -58,6 +58,7 @@ public class Gui2 extends Application {
                     else if(boardTemp[i][j] == "O"){
                         gameGridPane.add(new Circle (10,Color.BLUE),j,i);
                     }
+                    
                 }
             }
     }
@@ -67,6 +68,12 @@ public class Gui2 extends Application {
 
         
         displayBoard();
+        
+        
+            
+        
+
+
 			
 		//setting the texts
         Label scoreLabel = new Label("Score: " + gameBrain.score);
