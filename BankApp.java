@@ -23,7 +23,7 @@ public class BankApp extends Application
     /**
      * Initialize the BankAccount 
      */
-    private BankAccount account = new BankAccount(new Customer("John Doe"), 0.0);
+    private BankAccount account = new SavingsAccount(new Customer("John Doe"), 0.0);
     private TextField txtName = new TextField();
     private Label balance = new Label("Balance: " + account.getBalance());
 	
