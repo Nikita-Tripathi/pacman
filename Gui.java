@@ -11,12 +11,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.geometry.Pos;
-import javafx.geometry.Insets;
 import javafx.scene.shape.*;
-import javafx.scene.layout.*;
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.*;
-import javafx.scene.image.ImageView;
-import pacmanlogic.*;
+import javafx.scene.*;
+import javafx.scene.layout.*;
+
 
 
 /**
@@ -26,52 +26,44 @@ public class Gui extends Application {
     Brain gameBrain = new Brain();
         
     BorderPane root = new BorderPane();
-
+    Image image = new Image("File:Ghost.png");
+    ImageView pic = new ImageView(image);
     GridPane gameGridPane = new GridPane();
+    HBox var = new HBox(pic);
+    String keyPressed = "d";
+    Label scoreLabel = new Label("Score: " + gameBrain.score);
     
-
-
-    
-
+    //creating the visual board
     public void displayBoard() {
+        pic.setFitHeight(30);
+        pic.setFitWidth(30);
+        gameGridPane.gridLinesVisibleProperty();
         for (int i = 0; i < 10; i++) {
             gameGridPane.getColumnConstraints().add(new ColumnConstraints(40));
             gameGridPane.getRowConstraints().add(new RowConstraints(40));
+            
         }
-        //creating the visual board
-      
-        String [][] boardTemp = gameBrain.getDisplayArr();
-        String [][] board = gameBrain.getDisplayArr();
+            // updates the score and lives
+            scoreLabel.setText("Score: " + gameBrain.score+ "Lives: "+ gameBrain.lives);
+        
             gameGridPane.getChildren().clear();
-            for (int i = 0; i < boardTemp.length; i++) {
-                for (int j = 0; j < boardTemp[0].length; j++) {
-                    if(boardTemp[i][j] == "P"){
-                        ImageView pacmanImage = new ImageView();
-                        Image image = new Image(Gui.class.getResourceAsStream("pacman.png"));               
-                        pacmanImage.setImage(image);
-                        pacmanImage.setFitHeight(25);
-                        pacmanImage.setFitWidth(25);
-                        gameGridPane.add(pacmanImage,j,i);
-                        
+            for (int i = 0; i < gameBrain.getDisplayArr().length; i++) {
+                for (int j = 0; j < gameBrain.getDisplayArr()[0].length; j++) {
+                    if(gameBrain.getDisplayArr()[i][j] == "P"){
+                        gameGridPane.add(pic, j, i);
                         
                     }
-                    else if(boardTemp[i][j] == "G"){
-                        ImageView ghostImage = new ImageView();
-                        Image image1 = new Image(Gui.class.getResourceAsStream("Ghost.png"));
-                        ghostImage.setImage(image1);
-                        ghostImage.setFitHeight(35);
-                        ghostImage.setFitWidth(35);
-                        gameGridPane.add(ghostImage,j,i);
-                        
+                    else if(gameBrain.getDisplayArr()[i][j] == "G"){
+                        gameGridPane.add(new Rectangle(20, 20, Color.RED ),j,i);
                     }
 
-                    else if(boardTemp[i][j] == "C"){
-                        gameGridPane.add(new Circle(8, Color.YELLOW),j,i);
+                    else if(gameBrain.getDisplayArr()[i][j] == "C"){
+                        gameGridPane.add(new Circle(10, Color.YELLOW),j,i);
                     }
-                    else if(boardTemp[i][j] == "W"){
-                        gameGridPane.add(new Rectangle(5, 10,Color.BURLYWOOD),j,i);
+                    else if(gameBrain.getDisplayArr()[i][j] == "W"){
+                        gameGridPane.add(new Rectangle(5, 10,Color.GRAY),j,i);
                     }
-                    else if(boardTemp[i][j] == "O"){
+                    else if(gameBrain.getDisplayArr()[i][j] == "O"){
                         gameGridPane.add(new Circle (10,Color.BLUE),j,i);
                     }
                     
@@ -82,85 +74,80 @@ public class Gui extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        displayBoard();
+        
+        //displayBoard();
+        
+        
+            
+        
+
+
 			
 		//setting the texts
-        Label scoreLabel = new Label("Score: " + gameBrain.score);
+        gameGridPane.setStyle("-fx-background-color: #C0C0C0;");
  
-        Label youLost = new Label(" Game Over!!");
+        Label youLost = new Label(" You Lost!!");
         root.setTop(scoreLabel);
         root.setCenter(gameGridPane);
-        //gameGridPane.setGridLinesVisible(true);
+        gameGridPane.setGridLinesVisible(true);
 
         Scene gameScreen = new Scene(root, 700, 700);
 
-       /** Event handler handles 
-        *  key presses 
-        */
+		//Event handler
         gameScreen.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+			if(key.getCode() == javafx.scene.input.KeyCode.A ) {
+                System.out.println("A is pressed");
+                // var.setCenterX(var.getCenterX() + 10);
+                keyPressed = "a";
+            }
+            else if (key.getCode() == javafx.scene.input.KeyCode.W) {
+                System.out.println("W is pressed");
+                keyPressed = "w";
+                
+            }
+            else if (key.getCode() == javafx.scene.input.KeyCode.D) {
+                System.out.println("d is pressed ");
+                keyPressed = "d";
+                
+            }
+            else if (key.getCode() == javafx.scene.input.KeyCode.S) {
+                System.out.println("s is pressed");
+                keyPressed = "s";
+            }
+            else if (key.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                System.exit(0);
+            }
 			
-			//normal pacman
-			if(gameBrain.powerStatus == false) {
-                gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
-				gameBrain.checkLives("player");
-                gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.move(""));
-				gameBrain.checkLives("player");
-				displayBoard();
-				gameBrain.checkCoins();
-			}
 			
-			//pacman with power up
-			if(gameBrain.powerStatus == true) {
-				int counter = 50;
-				System.out.println(counter);
-
-				
-				if(counter > 0 && gameBrain.score < 850){ //score is also for testing
-					gameBrain.gameWorld.setPowerUpArr();
-					gameBrain.checkLives("ghost");
-					gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(key.getText()));
-					gameBrain.checkLives("ghost");
-					gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.move(""));
-					gameBrain.checkLives("ghost");
-					
-					gameBrain.checkCoins();
-					System.out.println(counter);
-					
-					counter--;
-				}
-				gameBrain.gameWorld.resetFromPowerUpArr();
-				
-				gameBrain.powerStatus = false;
-			}
-            
-			//checks the game status
-            if(gameBrain.checkGameOver()) {
-                root.getChildren().remove(gameGridPane);
-                root.setCenter(youLost);
-                youLost.setFont(Font.font("Verdana" , 76));
-                youLost.setTextFill(Color.RED);
-                
-                }
-			// check for win	
-            else if( gameBrain.score >= 850) {
-                root.getChildren().remove(gameGridPane);
-                Label label1 = new Label("You Won!");
-                label1.setFont(Font.font("Verdana" , 76));
-                label1.setTextFill(Color.DARKGREEN);
-                root.setCenter(label1);
-                
-                }
-                
-            System.out.println(gameBrain.score);
-            scoreLabel.setText("Score: " + gameBrain.score+ "Lives: "+ gameBrain.lives);
-             
-            
-            
-            
         });
-        gameGridPane.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        root.setCenter(gameGridPane);
-        primaryStage.setTitle("PACMAN");
+        long lastUpdate = System.nanoTime();
+        
+        new AnimationTimer() {
+            long lastUpdate = System.nanoTime();
+            @Override
+            public void handle(long now) {
+                displayBoard(); 
+                // System.out.println("in animation timer;");
+                //from stackoverflow https://stackoverflow.com/questions/30146560/how-to-change-animationtimer-speed
+                
+                
+                    if (now - lastUpdate >= 500000000l ) {
+                    
+                    gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(keyPressed));
+                    gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove()); 
+                    gameBrain.checkCoins();  
+                    gameBrain.checkLives("player");
+                    System.out.println(keyPressed);
+                    lastUpdate = now;
+                }
+                
+              
+                
+                
+            }
+        }.start();
+
+        primaryStage.setTitle("PACMAN Beta");
         primaryStage.setScene(gameScreen);
         primaryStage.show();
 
