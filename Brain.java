@@ -174,16 +174,16 @@ public class Brain {
 			System.out.println("Moves left: " + counter);
             System.out.println();
 			
-			counter--;
+			counter--; 
 		}
 		gameWorld.resetFromPowerUpArr();
 		
 		powerStatus = false;
 	}
 	
-	/**
-		resets pacman to the first block if lives stil remain, and ghost to the inside box if consumed
-	*/
+	
+		//resets pacman to the first block if lives stil remain, and ghost to the inside box if consumed
+	
 	public void resetPosition(String character) {
 		
 		String[][] newMoveArr = gameWorld.copyArr(gameWorld.getMovingArr());

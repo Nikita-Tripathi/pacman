@@ -14,48 +14,47 @@ import javafx.geometry.Pos;
 import javafx.scene.shape.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.*;
-import javafx.scene.*;
-import javafx.scene.layout.*;
+
 
 
 
 /**
  * gui
  */
-public class Gui extends Application {
+public class Guiworkingcopy extends Application {
     Brain gameBrain = new Brain();
         
     BorderPane root = new BorderPane();
-    Image image = new Image("File:Ghost.png");
-    ImageView pic = new ImageView(image);
+
     GridPane gameGridPane = new GridPane();
-    HBox var = new HBox(pic);
+    
+
     String keyPressed = "d";
     Label scoreLabel = new Label("Score: " + gameBrain.score);
     
     //creating the visual board
     public void displayBoard() {
-        pic.setFitHeight(30);
-        pic.setFitWidth(30);
-        gameGridPane.gridLinesVisibleProperty();
-        for (int i = 0; i < 10; i++) {
+        gameGridPane.setMaxSize(gameBrain.getDisplayArr().length * 40, gameBrain.getDisplayArr().length * 40);
+        for (int i = 0; i < gameBrain.getDisplayArr().length; i++) {
             gameGridPane.getColumnConstraints().add(new ColumnConstraints(40));
             gameGridPane.getRowConstraints().add(new RowConstraints(40));
             
         }
             // updates the score and lives
             scoreLabel.setText("Score: " + gameBrain.score+ "Lives: "+ gameBrain.lives);
-        
+            
             gameGridPane.getChildren().clear();
             for (int i = 0; i < gameBrain.getDisplayArr().length; i++) {
                 for (int j = 0; j < gameBrain.getDisplayArr()[0].length; j++) {
                     if(gameBrain.getDisplayArr()[i][j] == "P"){
-                        gameGridPane.add(pic, j, i);
+                        gameGridPane.add(new Rectangle(20, 20, Color.YELLOWGREEN),j,i);
                         
                     }
-                    else if(gameBrain.getDisplayArr()[i][j] == "G"){
-                        gameGridPane.add(pic, j, i);
+                    else if(gameBrain.getDisplayArr()[i][j] == "G" && gameBrain.powerStatus == false){
+                        gameGridPane.add(new Rectangle(20, 20, Color.PINK),j,i);
                     }
+                    else if(gameBrain.getDisplayArr()[i][j] == "G" && gameBrain.powerStatus == true){
+                        gameGridPane.add(new Rectangle(20, 20, Color.RED),j,i);}
 
                     else if(gameBrain.getDisplayArr()[i][j] == "C"){
                         gameGridPane.add(new Circle(10, Color.YELLOW),j,i);
@@ -83,14 +82,17 @@ public class Gui extends Application {
 
 			
 		//setting the texts
-        gameGridPane.setStyle("-fx-background-color: #C0C0C0;");
+        gameGridPane.setStyle("-fx-background-color: #B1C1C1;");
  
         Label youLost = new Label(" You Lost!!");
         root.setTop(scoreLabel);
+        root.setStyle("-fx-background-color: #FFFF00;");
+        root.setCenterShape(true);
         root.setCenter(gameGridPane);
+        
         gameGridPane.setGridLinesVisible(true);
 
-        Scene gameScreen = new Scene(root, 700, 700);
+        Scene gameScreen = new Scene(root, 600, 600);
 
 		//Event handler
         gameScreen.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
