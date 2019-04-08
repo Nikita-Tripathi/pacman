@@ -259,7 +259,7 @@ public class Brain {
 
     }
 
-    public void main(String[] args) {
+  /*   public void main(String[] args) {
         // Gameloop
         while (score < 850 && !checkGameOver()) {
 			checkLives("player");
@@ -285,5 +285,5 @@ public class Brain {
         } else {
 	        System.out.println("You Won!");
         }
-    }
+    } */
 }
