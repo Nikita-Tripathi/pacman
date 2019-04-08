@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import pacmanlogic.Brain;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -17,26 +18,32 @@ import javafx.scene.image.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 
+import pacmanlogic.*;
+
 
 
 /**
  * gui
  */
 public class Gui extends Application {
-    Brain gameBrain = new Brain();
-        
-    BorderPane root = new BorderPane();
-    Image image = new Image("File:Ghost.png");
-    ImageView pic = new ImageView(image);
-    GridPane gameGridPane = new GridPane();
-    HBox var = new HBox(pic);
-    String keyPressed = "d";
-    Label scoreLabel = new Label("Score: " + gameBrain.score);
+    
+    private Brain gameBrain = new Brain();
+    private BorderPane root = new BorderPane();
+    private Image image = new Image("File:Ghost.png");
+    private ImageView pic = new ImageView(image);
+    private Image pacImage = new Image("File:pacman.png");
+    private ImageView pacView = new ImageView(pacImage);
+    private GridPane gameGridPane = new GridPane();
+    private HBox var = new HBox(pic);
+    private String keyPressed = "d";
+    private Label scoreLabel = new Label("Score: " + gameBrain.getScore());
     
     //creating the visual board
     public void displayBoard() {
         pic.setFitHeight(30);
         pic.setFitWidth(30);
+        pacView.setFitHeight(30);
+        pacView.setFitWidth(30);
         gameGridPane.gridLinesVisibleProperty();
         for (int i = 0; i < 10; i++) {
             gameGridPane.getColumnConstraints().add(new ColumnConstraints(40));
@@ -44,17 +51,28 @@ public class Gui extends Application {
             
         }
             // updates the score and lives
-            scoreLabel.setText("Score: " + gameBrain.score+ "Lives: "+ gameBrain.lives);
+            scoreLabel.setText("Score: " + gameBrain.getScore()+ "Lives: "+ gameBrain.getLives());
         
             gameGridPane.getChildren().clear();
             for (int i = 0; i < gameBrain.getDisplayArr().length; i++) {
                 for (int j = 0; j < gameBrain.getDisplayArr()[0].length; j++) {
                     if(gameBrain.getDisplayArr()[i][j] == "P"){
-                        gameGridPane.add(pic, j, i);
-                        
+                        gameGridPane.add(pacView, j, i);
+                        if (keyPressed == "s") {
+                            pacView.setRotate(90);
+                        }
+                        else if (keyPressed == "w") {
+                            pacView.setRotate(270);
+                        } 
+                        else if (keyPressed == "d") {
+                            pacView.setRotate(0);
+                        }
+                        else if ( keyPressed == "a") {
+                            pacView.setRotate(180);
+                        }
                     }
                     else if(gameBrain.getDisplayArr()[i][j] == "G"){
-                        gameGridPane.add(new Rectangle(20, 20, Color.RED ),j,i);
+                        gameGridPane.add(pic, j,i);
                     }
 
                     else if(gameBrain.getDisplayArr()[i][j] == "C"){
@@ -133,8 +151,8 @@ public class Gui extends Application {
                 
                     if (now - lastUpdate >= 500000000l ) {
                     
-                    gameBrain.validateMove(gameBrain.playerPosition, gameBrain.player.move(keyPressed));
-                    gameBrain.validateMove(gameBrain.ghostPosition, gameBrain.ghost1.getRandomMove()); 
+                    gameBrain.validateMove(gameBrain.getPlayerPosition(), gameBrain.getPlayer().move(keyPressed));
+                    gameBrain.validateMove(gameBrain.getGhostPosition(), gameBrain.getGhost1().move(keyPressed)); 
                     gameBrain.checkCoins();  
                     gameBrain.checkLives("player");
                     System.out.println(keyPressed);
