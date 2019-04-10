@@ -119,22 +119,18 @@ public class Gui extends Application {
 		//Event handler
         gameScreen.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
 			if(key.getCode() == javafx.scene.input.KeyCode.A ) {
-                System.out.println("A is pressed");
                 // var.setCenterX(var.getCenterX() + 10);
                 keyPressed = "a";
             }
             else if (key.getCode() == javafx.scene.input.KeyCode.W) {
-                System.out.println("W is pressed");
                 keyPressed = "w";
                 
             }
             else if (key.getCode() == javafx.scene.input.KeyCode.D) {
-                System.out.println("d is pressed ");
                 keyPressed = "d";
                 
             }
             else if (key.getCode() == javafx.scene.input.KeyCode.S) {
-                System.out.println("s is pressed");
                 keyPressed = "s";
             }
             else if (key.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
@@ -148,16 +144,6 @@ public class Gui extends Application {
                 youLost.setTextFill(Color.RED);
                 
                 }
-			// check for win	
-            else if( player.getScore() >= 850) {
-                root.getChildren().remove(gameGridPane);
-                Label label1 = new Label("You Won!");
-                label1.setFont(Font.font("Verdana" , 50));
-                label1.setTextFill(Color.DARKGREEN);
-                root.setCenter(label1);
-                
-            }
-
             
         });
         long lastUpdate = System.nanoTime();
@@ -186,9 +172,15 @@ public class Gui extends Application {
                         gameBrain.getGhost().resetCounter();
                     }
                     gameBrain.checkLives();
-                    System.out.println(keyPressed);
+                    //System.out.println(keyPressed);
                     lastUpdate = now;
+                    if(gameBrain.checkWin()== true) {
+                        root.getChildren().remove(gameGridPane);
+                        root.setCenter(new Label("YOU WON"));
+                        //youLost.setTextFill(color.RED);
+                    }
                 }
+                
                 
               
                 
@@ -196,6 +188,11 @@ public class Gui extends Application {
             }
         }.start();
 
+        if(gameBrain.checkWin()== true) {
+            root.getChildren().remove(gameGridPane);
+            root.setCenter(youLost);
+            //youLost.setTextFill(color.RED);
+        }
        
             
         System.out.println(player.getScore());

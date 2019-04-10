@@ -41,7 +41,7 @@ public class Brain {
         {0, 0, 0, 0, 0, 0, 0, -1, 0, 0},
 
     };
-
+    public int amountOfCoins = 0;
     private final int[] initialPlayerPosition = {0, 0};
     private final int[] initialGhostPosition = {2, 4}; 
     private Pacman player = new Pacman(initialPlayerPosition);
@@ -191,17 +191,43 @@ public class Brain {
         if (coins[playerPosition[0]][playerPosition[1]] != " "){
             if (coins[playerPosition[0]][playerPosition[1]] == "C") {
                 player.addScore(100);
-
+                if(checkWin()== true){
+                    
+                    System.out.println("YOU WON");
+                }
             } else if (coins[playerPosition[0]][playerPosition[1]] == "O"){
                 player.addScore(250);
 				newCoins[playerPosition[0]][playerPosition[1]] = " ";
 				gameWorld.setCoinArr(newCoins);
 				System.out.println("Collected PowerPellet!");
-				activatePowerUp();
+                activatePowerUp();
+                if(checkWin() == true){
+                    System.out.println("YOU WON");
+                }
             }
             newCoins[playerPosition[0]][playerPosition[1]] = " ";
             gameWorld.setCoinArr(newCoins);
             System.out.println("Collected!");
+        }
+        
+    }
+
+    public boolean checkWin() {
+        amountOfCoins = 0;
+        for (int x= 0; x < getDisplayArr().length; x++){
+            for (int y= 0; y < getDisplayArr()[0].length; y++) {
+                
+                if (getDisplayArr()[x][y] == "C" ) {
+                    amountOfCoins ++;
+                }
+            }
+        }
+        if( amountOfCoins == 0){
+            return true;
+        }
+        else {
+            System.out.println("this is amount of coins: " + amountOfCoins);
+            return false;
         }
     }
  
@@ -327,4 +353,5 @@ public class Brain {
 		System.out.println();
 
     }
+   
 }
