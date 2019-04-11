@@ -20,16 +20,79 @@ public class Brain {
 
         {" ", " ", " ", " ", " ", " ", " ", "W", " ", " "},
 
-     };
-    
-     //Instance variables
+    };
+
+    //Instance variables
     private int width = initialArray.length;
     private int height = initialArray[0].length;
+
+    // -1: wall -2: ghost
+    public double[][] diffusedArray = {
+        {0, 0, 0, 0, -1, -1, -1, 0, -1, 0},
+
+        {0, -1, 0, 0, 0, 0, 0, 0, -1, 0},
+
+        {0, -1, 0, -1, 0, -1, 0, 0, -1, 0},
+
+        {0, -1, 0, -1, -1, -1, 0, 0, 0, 0},
+
+        {0, -1, 0, 0, 0, 0, 0, -1, -1, 0},
+
+        {0, 0, 0, 0, 0, 0, 0, -1, 0, 0},
+
+    };
+    public int amountOfCoins = 0;
     private final int[] initialPlayerPosition = {0, 0};
     private final int[] initialGhostPosition = {2, 4}; 
     private Pacman player = new Pacman(initialPlayerPosition);
-    private Ghost ghost1 = new Ghost(initialGhostPosition);
+    private Ghost ghost1 = new Ghost(initialGhostPosition, diffusedArray);
     private World gameWorld = new World(initialArray, player.getPosition(), ghost1.getPosition());
+
+    public void updateDiffArr() {
+        for (int row = 0; row < diffusedArray.length; row++) {
+            for (int col = 0; col < diffusedArray[0].length; col++) {
+                if (diffusedArray[row][col] == -2 || diffusedArray[row][col] == 1) diffusedArray[row][col] = 0;
+            }
+        }
+        diffusedArray[initialPlayerPosition[0]][initialPlayerPosition[1]] = 1;
+        diffusedArray[initialGhostPosition[0]][initialGhostPosition[1]] = -2;
+    }
+
+    public void diffuse() {
+        for (int row = 0; row < diffusedArray.length; row++) {
+            for (int col = 0; col < diffusedArray[row].length; col++) {
+                if (diffusedArray[row][col] < 0) {
+                    continue;
+                } else if (diffusedArray[row][col] == 1) {
+                    continue;
+                }
+
+                double sumOfAdjacents = 0;
+                int tilesUsed = 0;
+                int[][] toGet = {{row - 1, col}, {row, col - 1}, {row, col + 1}, {row + 1, col}};
+                
+                for (int[] coord : toGet) {
+                    if (coord[0] >= 0 && coord[0] <= diffusedArray.length-1 && coord[1] >= 0 && coord[1] <= diffusedArray.length-1 && diffusedArray[coord[0]][coord[1]] >= 0) {
+                        //System.out.println("( "+ row + " " + col + " ) (" + coord[0] + " " + coord[1] + " ) " + result[coord[0]][coord[1]]);
+                        sumOfAdjacents += diffusedArray[coord[0]][coord[1]];
+                        tilesUsed++;
+                    }
+                }
+
+                diffusedArray[row][col] = sumOfAdjacents/tilesUsed;
+
+            }
+        }
+
+    }
+
+    public void diffuseFully() {
+        for (double[] row : diffusedArray) {
+            for (double item : row) {
+                if (item == 0) diffuse();
+            }
+        }
+    }
     
     //Getters and setters
    public int getWidth(){
@@ -73,6 +136,8 @@ public class Brain {
             System.out.println("Couldn't move, Did nothing");
         } else {
             move(position, move);
+            // System.out.println(initialPlayerPosition[0] + " " +  initialPlayerPosition[1]);
+            // System.out.println(initialGhostPosition[0] + " " +  initialGhostPosition[1]);
         }
 
     }
@@ -109,7 +174,10 @@ public class Brain {
 			newArr[position[0]][position[1]] = character;
 
 			gameWorld.setMovingArr(newArr);
-		}
+        }
+        
+        updateDiffArr();
+        diffuseFully();
     }
 
     /**
@@ -123,17 +191,43 @@ public class Brain {
         if (coins[playerPosition[0]][playerPosition[1]] != " "){
             if (coins[playerPosition[0]][playerPosition[1]] == "C") {
                 player.addScore(100);
-
+                if(checkWin()== true){
+                    
+                    System.out.println("YOU WON");
+                }
             } else if (coins[playerPosition[0]][playerPosition[1]] == "O"){
                 player.addScore(250);
 				newCoins[playerPosition[0]][playerPosition[1]] = " ";
 				gameWorld.setCoinArr(newCoins);
 				System.out.println("Collected PowerPellet!");
-				activatePowerUp();
+                activatePowerUp();
+                if(checkWin() == true){
+                    System.out.println("YOU WON");
+                }
             }
             newCoins[playerPosition[0]][playerPosition[1]] = " ";
             gameWorld.setCoinArr(newCoins);
             System.out.println("Collected!");
+        }
+        
+    }
+
+    public boolean checkWin() {
+        amountOfCoins = 0;
+        for (int x= 0; x < getDisplayArr().length; x++){
+            for (int y= 0; y < getDisplayArr()[0].length; y++) {
+                
+                if (getDisplayArr()[x][y] == "C" ) {
+                    amountOfCoins ++;
+                }
+            }
+        }
+        if( amountOfCoins == 0){
+            return true;
+        }
+        else {
+            System.out.println("this is amount of coins: " + amountOfCoins);
+            return false;
         }
     }
  
@@ -259,4 +353,5 @@ public class Brain {
 		System.out.println();
 
     }
+   
 }
