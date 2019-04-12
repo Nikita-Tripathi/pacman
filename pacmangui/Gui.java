@@ -1,4 +1,4 @@
-package pacmanqui;
+package pacmangui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -29,11 +29,11 @@ public class Gui extends Application {
     Brain gameBrain = new Brain();
         
     BorderPane root = new BorderPane();
-    Image image = new Image("Resources\\Ghost.gif");
+    Image image = new Image("Resources/Ghost.gif");
 
     GridPane gameGridPane = new GridPane();
 
-    Image image1 = new Image("Resources\\Gif.gif");
+    Image image1 = new Image("Resources/Gif.gif");
     ImageView picPacman = new ImageView(image1);
    
     HBox varPacman = new HBox(picPacman);
